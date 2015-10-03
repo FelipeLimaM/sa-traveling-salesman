@@ -1,5 +1,6 @@
 # -.- coding: utf8 -.-
 import math, random
+import matplotlib.pyplot as plt
 from Cidade import Cidade
 from Viagem import Viagem
 
@@ -80,3 +81,14 @@ if __name__ == '__main__':
 
 	task = SimulatedAnnealing(cidades)
 	task.run()
+
+	x_list = []
+	y_list = []
+	for c in cidades:
+		x_list.append(c.getX())
+		y_list.append(c.getY())
+
+	plt.fill(x_list, y_list, edgecolor='b', fill=False)
+	plt.plot(x_list, y_list, 'bo')
+	plt.grid(True)
+	plt.show()

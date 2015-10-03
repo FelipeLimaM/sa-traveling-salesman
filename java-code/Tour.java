@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Tour{
+public class Tour {
 
     // Holds our tour of cities
     private ArrayList<City> tour = new ArrayList<City>();

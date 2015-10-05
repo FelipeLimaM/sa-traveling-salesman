@@ -1,6 +1,6 @@
-import numpy as np
+# import numpy as np
 import matplotlib.pyplot as plt
-from TravelingSalesman import *
+from TS import *
 
 class Gui:
     fig = ''
@@ -35,8 +35,8 @@ class Gui:
                 points.append(City(coord[0],coord[1]))
 
             #magic
-            task = SimulatedAnnealing(points)
-            string = task.run()
+            magic = SimulatedAnnealing(points)
+            points, string = magic.run()
 
             self.X = []
             self.Y = []

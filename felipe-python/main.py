@@ -5,6 +5,7 @@ from TS import *
 class Gui:
     fig = ''
     ax = ''
+    current = ''
     X = []
     Y = []
 
@@ -18,10 +19,10 @@ class Gui:
 
 
     def set_figure(self,string):
-        plt.cla()
+        self.ax.cla()
         self.reload()
         self.ax.set_title(string)
-        plt.plot(self.X,self.Y, 'bo')
+        self.ax.plot(self.X,self.Y, 'bo')
         plt.draw()
 
 
@@ -29,13 +30,12 @@ class Gui:
         if event.key == "enter":
             self.ax.set_title('Aguarde')
             plt.draw()
-            coords = list(plt.gca().get_lines()[0].get_xydata())
             points = []
-            for coord in coords:
-                points.append(City(coord[0],coord[1]))
+            for e in xrange(len(self.X)):
+                points.append(City(self.X[e],self.Y[e]))
 
             #magic
-            magic = SimulatedAnnealing(points)
+            magic = SimulatedAnnealing(points,self.current)
             points, string = magic.run()
 
             self.X = []
@@ -45,7 +45,7 @@ class Gui:
                 self.Y.append(p.getY())
 
             self.set_figure(string)
-            plt.fill(self.X, self.Y, edgecolor='r', fill=False) 
+            self.ax.fill(self.X, self.Y, edgecolor='r', fill=False) 
             
             plt.draw()
 
@@ -59,16 +59,18 @@ class Gui:
 
     def __init__(self):
         self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
+        self.ax = self.fig.add_subplot(211)
+        self.current = self.fig.add_subplot(212)
         self.fig.canvas.mpl_connect('key_press_event', self.on_key)
         self.fig.canvas.mpl_connect('button_press_event', self.on_press)
 
 
+
     def reload(self):
         self.ax.set_title('')
-        plt.grid(True)
-        plt.ylim(0, 10.0)
-        plt.xlim(0, 10.0)
+        self.ax.grid(True)
+        self.ax.set_ylim(0, 10.0)
+        self.ax.set_xlim(0, 10.0)
 
 
     def build(self):

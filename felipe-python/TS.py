@@ -79,14 +79,37 @@ class Way:
 		return self.distance
 
 
+	def get_data_grafic(self,):
+		X = []
+		Y = []
+		for p in self.way:
+			X.append(p.getX())
+			Y.append(p.getY())
+		return X, Y
+
+
 class SimulatedAnnealing():
 
+	fig = ''
+	# ax = ""
 	list_ = []
 	temp = 1000
 	cooling_rate = 0.0003
 
-	def __init__(self, lista):
+	def print_plotpy(self,way):
+		x, y= way.get_data_grafic();
+		self.fig.cla()
+		self.fig.set_title('')
+		self.fig.grid(True)
+		self.fig.set_ylim(0, 10.0)
+		self.fig.set_xlim(0, 10.0)
+		self.fig.plot(x,y, 'bo')
+		self.fig.fill(x, y, edgecolor='r', fill=False) 
+		plt.draw()
+
+	def __init__(self, lista,figure):
 		self.list_ = lista
+		self.fig = figure
 
 	def acceptance_probability(self, energia, new_energy):
 		if new_energy < energia:
@@ -94,6 +117,7 @@ class SimulatedAnnealing():
 		return math.exp((energia - new_energy) / self.temp)
 
 	def run(self):
+
 		soluction_current = Way()
 		soluction_current.build(self.list_)
 
@@ -101,6 +125,7 @@ class SimulatedAnnealing():
 
 		best_solution = Way(soluction_current)
 
+		self.print_plotpy(best_solution)
 		while self.temp > 1:
 			new_soluction = Way(soluction_current)
 
@@ -113,6 +138,15 @@ class SimulatedAnnealing():
 			new_soluction.set_city(pos1, c2)
 			new_soluction.set_city(pos2, c1)
 
+			pos2 = pos1 = 0
+			while pos2 == pos1 or pos1 > pos2:
+				pos2 = int((new_soluction.length() * random.random()))
+				pos1 = int((new_soluction.length() * random.random()))
+			new_soluction.way[pos1:pos2] = list(reversed(new_soluction.way[pos1:pos2]))
+
+			
+
+			# self.print_plotpy(soluction_current)
 			energia_atual = soluction_current.get_alldistance()
 			new_energy = new_soluction.get_alldistance()
 
@@ -121,6 +155,8 @@ class SimulatedAnnealing():
 			
 			if soluction_current.get_alldistance() < best_solution.get_alldistance():
 				best_solution = soluction_current
+				self.print_plotpy(best_solution)
+
 
 			self.temp *= (1 - self.cooling_rate)
 
